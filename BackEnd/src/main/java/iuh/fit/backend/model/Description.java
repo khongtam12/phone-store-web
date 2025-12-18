@@ -6,21 +6,26 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "images")
-public class Image {
+@Table(name = "descriptions")
+public class Description {
     @Id
-    private String imageId;
-    private String imageUrl;
-    private String altText;
-    private boolean isMain;
-    private LocalDateTime uploadDate;
+    private String id;
+    private String name;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String value;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private DescriptionType type;
+
     @ManyToOne
     @JoinColumn(name = "productId")
     @JsonBackReference
     private Product product;
+
 }

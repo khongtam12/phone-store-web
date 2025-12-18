@@ -1,5 +1,6 @@
 package iuh.fit.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,5 +41,34 @@ public class Product {
     @ToString.Exclude
     @JsonManagedReference
     private List<Review> reviews;
+
+    @ManyToOne
+    @JoinColumn(name = "brandId")
+    @JsonBackReference
+    private Brand brand;
+
+    @ManyToOne
+    @JoinColumn(name = "categoryId")
+    @JsonBackReference
+    private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "supplierId")
+    @JsonBackReference
+    private Supplier supplier;
+    @ManyToOne
+    @JoinColumn(name = "promotionId")
+    @JsonBackReference
+    private Promotion promotion;
+
+    @OneToMany(mappedBy = "product")
+    @ToString.Exclude
+    @JsonManagedReference
+    private List<Description> descriptions;
+
+    @OneToMany(mappedBy = "product")
+    @ToString.Exclude
+    @JsonManagedReference
+    private List<Comment> comments;
 
 }

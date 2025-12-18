@@ -18,7 +18,8 @@ public class Account {
     private String username;
     private String password;
     private boolean status;
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
+
     private LocalDateTime lastLogin;
     private String provider;
     private String providerId;

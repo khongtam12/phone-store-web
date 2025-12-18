@@ -27,6 +27,12 @@ public class User {
     private String gender;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
+
+    @OneToOne
+    @ToString.Exclude
+    @JoinColumn(name = "accountId")
+    private Account accounts;
+
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @JsonManagedReference
@@ -43,6 +49,11 @@ public class User {
     @ToString.Exclude
     @JsonManagedReference
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    @JsonManagedReference
+    private List<Comment> comments;
 
 
 }
