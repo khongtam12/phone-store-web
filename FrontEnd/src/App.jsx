@@ -2,16 +2,12 @@
 import './App.css'
 import Header from './components/Header/Header'
 import Footer from './components/Footer/footer'
+import { RouterProvider } from 'react-router-dom'
+import { router } from './router'
 function App() {
 
   return (
-    <div>
-      <Header />
-      <div>
-        aa
-      </div>
-      <Footer />
-    </div>
+    <RouterProvider router={router} />
   )
 }
 

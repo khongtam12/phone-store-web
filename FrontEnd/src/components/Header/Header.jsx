@@ -59,8 +59,6 @@ export default function Header() {
                             <User className="w-6 h-6" />
                             <span className="hidden sm:inline font-medium">Đăng nhập</span>
                         </Link>
-
-
                         <Link
                             to="/"
                             className="px-3 py-2 bg-white text-red-600 rounded-lg font-medium hover:bg-gray-100 transition-colors"

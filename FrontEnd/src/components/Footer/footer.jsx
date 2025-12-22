@@ -87,8 +87,6 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
-
-
             <div className="fixed bottom-6 right-6 flex flex-col gap-3">
                 <button
                     onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
