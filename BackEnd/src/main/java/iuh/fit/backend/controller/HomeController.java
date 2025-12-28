@@ -2,6 +2,7 @@ package iuh.fit.backend.controller;
 
 import iuh.fit.backend.dto.response.HomeDataDTO;
 import iuh.fit.backend.service.HomeService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,7 @@ public class HomeController {
         this.homeService = homeService;
     }
     @GetMapping
-    public HomeDataDTO getHomeData() {
-        return homeService.getHomeData();
+    public ResponseEntity<HomeDataDTO> getHomeData() {
+        return ResponseEntity.ok(homeService.getHomeData());
     }
 }
