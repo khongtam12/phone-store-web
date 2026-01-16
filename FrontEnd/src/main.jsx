@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { IntlProvider } from 'react-intl';
-import messagesInVietnamese from '@/locales/vi.json';
+import messagesInVietnamese from "@/locales/vi.json";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient({

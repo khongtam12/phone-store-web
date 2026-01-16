@@ -24,7 +24,7 @@ export default function Header() {
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <Link
-                            to="/"
+                            to="/product"
                             className="flex items-center gap-2 px-3 py-2 hover:bg-red-700 rounded-lg transition-colors"
 
                         >
