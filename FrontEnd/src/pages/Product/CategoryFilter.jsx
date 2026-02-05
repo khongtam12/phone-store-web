@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getCategories } from '../../services/CategoryService';
-export default function CategoryFilter() {
+export default function CategoryFilter({ selectedCategory, onCategoryToggle }) {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
@@ -19,17 +19,27 @@ export default function CategoryFilter() {
                         Chọn theo nhu cầu:
                     </span>
                     <div className="flex flex-wrap gap-3">
-                        {categories.map((category) => (
+                        {categories.map((c) => (
                             <button
-                                key={category.categoryId}
-
-                                className={`flex flex-col items-center justify-center w-24 h-24 rounded-xl border-2 transition-all duration-200  `}
+                                key={c.name}
+                                onClick={() => {
+                                    onCategoryToggle(c.name)
+                                    // console.log("Clicked category:", c);
+                                }}
+                                className={`flex flex-col items-center justify-center w-24 h-24 rounded-xl border-2 transition-all duration-200 
+                                ${
+                                    // 2. Cập nhật logic so sánh
+                                    selectedCategory === c.name
+                                        ? 'border-red-600 text-red-600 shadow-md bg-red-50'
+                                        : 'border-gray-200 text-gray-700 hover:border-red-300 hover:bg-gray-50'
+                                    }`}
                             >
                                 <img
-                                    src={category.image}
-                                    alt={category.title}
+                                    src={c.image}
+                                    alt={c.name}
                                     className="w-10 h-10 object-contain mb-1"
                                 />
+                                <p className="text-xs font-medium text-center p-1">{c.name}</p>
                             </button>
                         ))}
                     </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getBrands } from '../../services/BrandService'
-export default function BrandFilter() {
+export default function BrandFilter({ selectedBrand, onBrandToggle }) {
     const [brands, setBrands] = useState([]);
 
     useEffect(() => {
@@ -11,6 +11,7 @@ export default function BrandFilter() {
         };
         fetchBrands();
     }, []);
+
     return (
         <div className="bg-white border-y border-gray-200">
             <div className="max-w-[1200px] mx-auto px-4 py-4">
@@ -22,8 +23,16 @@ export default function BrandFilter() {
                         {brands.map((brand) => (
                             <button
                                 key={brand.brandId}
+                                onClick={() => onBrandToggle(brand.name)}
 
-                                className={`flex items-center justify-center w-20 h-12 rounded-lg border-2 transition `}
+                                className={`flex items-center justify-center w-20 h-12 rounded-lg border-2 transition 
+                                    ${selectedBrand === brand.name
+                                        ? 'border-red-600  text-red-600'
+                                        : 'border-gray-200 hover:border-red-300 text-gray-700'
+                                    }
+
+                                    
+                                    `}
                             >
                                 <img
                                     src={brand.logo}
