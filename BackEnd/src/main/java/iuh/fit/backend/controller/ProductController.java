@@ -1,5 +1,6 @@
 package iuh.fit.backend.controller;
 
+import iuh.fit.backend.dto.request.ProductFilterRequest;
 import iuh.fit.backend.dto.response.ProductSummaryDTO;
 import iuh.fit.backend.model.Product;
 import iuh.fit.backend.service.ProductService;
@@ -26,5 +27,16 @@ public class ProductController {
 
     public List<Product> findAllProducts(){
         return productService.getProducts();
+    }
+    @PostMapping("/filter")
+    public Page<ProductSummaryDTO> filterProducts(@RequestBody ProductFilterRequest request,
+                                                  @RequestParam (defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "16") int size
+    ){
+return    productService.filterProducts(
+        request.getBrand(),
+        request.getCategory(),
+        page,
+        size );
     }
 }

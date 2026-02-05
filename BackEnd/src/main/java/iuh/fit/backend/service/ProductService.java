@@ -1,6 +1,7 @@
 package iuh.fit.backend.service;
 
 import iuh.fit.backend.dto.response.ProductSummaryDTO;
+import iuh.fit.backend.dto.response.specification.ProductSpecification;
 import iuh.fit.backend.mapper.ProductMapper;
 import iuh.fit.backend.model.Product;
 import iuh.fit.backend.model.ProductStatus;
@@ -9,6 +10,7 @@ import iuh.fit.backend.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,5 +38,14 @@ public class ProductService {
     public List<ProductSummaryDTO> getNewsProducts(int limit){
         PageRequest pageRequest=PageRequest.of(0,limit, Sort.by("createdDate").descending());
         return productRepository.findProductByStatusActive(pageRequest).stream().map(productMapper::toProductSummaryDTO).collect(Collectors.toList());
+    }
+    public  Page<ProductSummaryDTO> filterProducts(String brand,String category,int page, int size){
+        Specification<Product> spec=Specification
+                .allOf(ProductSpecification.hasBrand(brand)
+                        .and(ProductSpecification.hasCategory(category)));
+
+
+        Page<Product> productPage=productRepository.findAll(spec,PageRequest.of(page,size));
+        return  productPage.map(productMapper::toProductSummaryDTO);
     }
 }

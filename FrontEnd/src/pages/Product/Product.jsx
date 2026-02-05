@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Banner from './Banner'
 import BrandFilter from './BrandFilter'
 import CategoryFilter from './CategoryFilter'
 import { useSearchParams } from 'react-router-dom'
+import ProductGrid from './ProductGrid'
 export default function Product() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedBrand, setSelectedBrand] = useState(
@@ -21,6 +22,15 @@ export default function Product() {
             prev === categoryName ? null : categoryName
         ))
     };
+    useEffect(() => {
+        const allFilters = {
+            brand: selectedBrand,
+            category: selectedCategory
+        };
+        setSearchParams(allFilters, { replace: true })
+    }, [selectedBrand, selectedCategory])
+    const [page, setPage] = useState(() => Number(searchParams.get("page")) || 0);
+
     return (
         <div className="min-h-screen bg-gray-50">
             <Banner />
@@ -32,6 +42,13 @@ export default function Product() {
                 selectedCategory={selectedCategory}
                 onCategoryToggle={handleCategoryToggle}
             />
+            <ProductGrid
+                selectedBrand={selectedBrand}
+                selectedCategory={selectedCategory}
+                page={page}
+                setPage={setPage}
+            />
+
         </div>
     )
 }
