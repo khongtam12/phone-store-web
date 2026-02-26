@@ -5,15 +5,14 @@ import { filterProducts } from '@/services/productService';
 export default function ProductGrid({
     selectedBrand,
     selectedCategory,
+    filters,
     page,
     setPage
 }) {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0);
-    useEffect(() => {
-        setPage(0);
-    }, [selectedBrand, selectedCategory]);
+
     useEffect(() => {
         setLoading(true);
 
@@ -22,7 +21,11 @@ export default function ProductGrid({
             try {
                 const filtersPayload = {
                     brand: selectedBrand,
-                    category: selectedCategory
+                    category: selectedCategory,
+                    minPrice: filters.minPrice === 0 ? null : filters.minPrice,
+                    maxPrice: filters.maxPrice === 100000000 ? null : filters.maxPrice,
+                    storages: filters.storages.length === 0 ? null : filters.storages,
+                    isStockReady: filters.isStockReady
                 };
 
                 const data = await filterProducts(filtersPayload, page, 16);
@@ -37,7 +40,7 @@ export default function ProductGrid({
         };
 
         fetchFilteredProducts();
-    }, [selectedBrand, selectedCategory, page]);
+    }, [selectedBrand, selectedCategory, filters, page]);
 
     return (
         <div className="flex-1">

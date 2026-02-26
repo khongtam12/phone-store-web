@@ -1,11 +1,21 @@
-
-import { useState } from 'react';
 import { ChevronDown } from "lucide-react";
+
+import { useState, useEffect } from 'react';
 import { Range } from 'react-range';
 
 export default function FilterSidebar({ filters, onFiltersChange, onResetAllFilters }) {
     const [expandedSections, setExpandedSections] = useState(['price', 'storages', 'isStockReady']);
-    const priceRange = [filters.minPrice, filters.maxPrice];
+
+    const [priceRange, setPriceRange] = useState([
+        filters.minPrice,
+        filters.maxPrice,
+    ]);
+
+
+    useEffect(() => {
+        setPriceRange([filters.minPrice, filters.maxPrice]);
+    }, [filters.minPrice, filters.maxPrice]);
+
 
 
     const toggleSection = (section) => {
@@ -13,13 +23,7 @@ export default function FilterSidebar({ filters, onFiltersChange, onResetAllFilt
             prev.includes(section) ? prev.filter(s => s !== section) : [...prev, section]
         );
     };
-    const handlePriceChange = (values) => {
-        onFiltersChange({
-            ...filters,
-            minPrice: values[0],
-            maxPrice: values[1]
-        });
-    };
+
     const handleCheckboxChange = (sectionId, option) => {
 
         if (sectionId === 'isStockReady') {
@@ -39,9 +43,22 @@ export default function FilterSidebar({ filters, onFiltersChange, onResetAllFilt
 
         onFiltersChange({ ...filters, [sectionId]: newValues });
     };
+
     const resetFilters = () => {
         onResetAllFilters();
     };
+
+    const handlePriceChange = (values) => {
+        setPriceRange(values);
+
+        onFiltersChange({
+            ...filters,
+            minPrice: values[0],
+            maxPrice: values[1]
+        });
+    };
+
+
     const filterSections = [
         { id: 'price', title: 'Mức giá' },
         { id: 'storages', title: 'Bộ nhớ trong', options: ['64GB', '128GB', '256GB', '512GB', '1TB'] },

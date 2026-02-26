@@ -36,6 +36,10 @@ public class ProductController {
 return    productService.filterProducts(
         request.getBrand(),
         request.getCategory(),
+        request.getMinPrice(),
+        request.getMaxPrice(),
+        request.getStorages(),
+        request.isStockReady(),
         page,
         size );
     }

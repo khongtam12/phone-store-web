@@ -5,13 +5,42 @@ import CategoryFilter from './CategoryFilter'
 import { useSearchParams } from 'react-router-dom'
 import ProductGrid from './ProductGrid'
 import FilterSidebar from './FilterSidebar'
+const defaultFilters = {
+    minPrice: 0,
+    maxPrice: 100000000,
+    storages: [],
+    isStockReady: false,
+};
+
+const createCleanParams = (obj) => {
+    const params = {};
+
+    Object.entries(obj).forEach(([key, value]) => {
+        if (value === null || value === undefined) return;
+
+        if (key === "isStockReady") {
+            if (value === true) {
+                params[key] = "true";
+            }
+            return;
+        }
+
+        if (Array.isArray(value)) {
+            if (value.length > 0) {
+                params[key] = value;
+            }
+            return;
+        }
+
+        if (value !== "" && value !== "formal") {
+            params[key] = value;
+        }
+    });
+
+    return params;
+};
 export default function Product() {
-    const defaultFilters = {
-        minPrice: 0,
-        maxPrice: 100000000,
-        storages: [],
-        isStockReady: false,
-    };
+
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedBrand, setSelectedBrand] = useState(
         () => searchParams.get("brand") || null
@@ -19,6 +48,7 @@ export default function Product() {
     const [selectedCategory, setSelectedCategory] = useState(
         () => searchParams.get("category") || null
     )
+
     const handleBrandToggle = (brandName) => {
         setSelectedBrand((prev) => (
             prev === brandName ? null : brandName
@@ -36,24 +66,34 @@ export default function Product() {
         setSelectedBrand(null);
         setSelectedCategory(null);
         setFilters(defaultFilters);
+        setPage(0);
         setSearchParams({}, { replace: true });
 
     }
-
+    const [filters, setFilters] = useState(() => ({
+        minPrice: Number(searchParams.get('minPrice')) || 0,
+        maxPrice: Number(searchParams.get('maxPrice')) || 100000000,
+        storages: searchParams.getAll('storages') || [],
+        isStockReady: searchParams.get('isStockReady') === 'true' || false,
+    }))
+    const [page, setPage] = useState(() => Number(searchParams.get("page")) || 0);
+    useEffect(() => {
+        setPage(0);
+    }, [selectedBrand, selectedCategory, filters]);
     useEffect(() => {
         const allFilters = {
             brand: selectedBrand,
-            category: selectedCategory
+            category: selectedCategory,
+            minPrice: filters.minPrice === 0 ? null : filters.minPrice,
+            maxPrice: filters.maxPrice === 100000000 ? null : filters.maxPrice,
+            storages: filters.storages,
+            isStockReady: filters.isStockReady,
+            page: page
+
         };
-        setSearchParams(allFilters, { replace: true })
-    }, [selectedBrand, selectedCategory])
-    const [page, setPage] = useState(() => Number(searchParams.get("page")) || 0);
-    const [filters, setFilters] = useState(() => ({
-        minPrice: searchParams.get("minPrice") || 0,
-        maxPrice: searchParams.get("maxPrice") || 100000000,
-        storages: searchParams.getAll('storages') || [], // dùng getAll cho mảng
-        isStockReady: searchParams.get('isStockReady') === 'true' || false,
-    }))
+        setSearchParams(createCleanParams(allFilters), { replace: true });
+    }, [selectedBrand, selectedCategory, filters, page, setSearchParams]);
+
     return (
         <div className="min-h-screen bg-gray-50">
             <Banner />
@@ -75,6 +115,7 @@ export default function Product() {
                     <ProductGrid
                         selectedBrand={selectedBrand}
                         selectedCategory={selectedCategory}
+                        filters={filters}
                         page={page}
                         setPage={setPage}
                     />

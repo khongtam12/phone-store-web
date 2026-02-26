@@ -39,10 +39,13 @@ public class ProductService {
         PageRequest pageRequest=PageRequest.of(0,limit, Sort.by("createdDate").descending());
         return productRepository.findProductByStatusActive(pageRequest).stream().map(productMapper::toProductSummaryDTO).collect(Collectors.toList());
     }
-    public  Page<ProductSummaryDTO> filterProducts(String brand,String category,int page, int size){
+    public  Page<ProductSummaryDTO> filterProducts(String brand,String category,Double minPrice,Double maxPrice,List<String> storages,boolean isStorage,int page, int size){
         Specification<Product> spec=Specification
                 .allOf(ProductSpecification.hasBrand(brand)
-                        .and(ProductSpecification.hasCategory(category)));
+                        .and(ProductSpecification.hasCategory(category)))
+                .and(ProductSpecification.priceBetween(minPrice, maxPrice))
+                .and(ProductSpecification.hasStorages(storages))
+                .and(ProductSpecification.stockReady(isStorage));
 
 
         Page<Product> productPage=productRepository.findAll(spec,PageRequest.of(page,size));
