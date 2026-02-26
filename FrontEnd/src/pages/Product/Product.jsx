@@ -4,7 +4,14 @@ import BrandFilter from './BrandFilter'
 import CategoryFilter from './CategoryFilter'
 import { useSearchParams } from 'react-router-dom'
 import ProductGrid from './ProductGrid'
+import FilterSidebar from './FilterSidebar'
 export default function Product() {
+    const defaultFilters = {
+        minPrice: 0,
+        maxPrice: 100000000,
+        storages: [],
+        isStockReady: false,
+    };
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedBrand, setSelectedBrand] = useState(
         () => searchParams.get("brand") || null
@@ -22,6 +29,17 @@ export default function Product() {
             prev === categoryName ? null : categoryName
         ))
     };
+    const handleFilterChange = (newFilters) => {
+        setFilters(newFilters);
+    }
+    const handleResetAllFilters = () => {
+        setSelectedBrand(null);
+        setSelectedCategory(null);
+        setFilters(defaultFilters);
+        setSearchParams({}, { replace: true });
+
+    }
+
     useEffect(() => {
         const allFilters = {
             brand: selectedBrand,
@@ -30,7 +48,12 @@ export default function Product() {
         setSearchParams(allFilters, { replace: true })
     }, [selectedBrand, selectedCategory])
     const [page, setPage] = useState(() => Number(searchParams.get("page")) || 0);
-
+    const [filters, setFilters] = useState(() => ({
+        minPrice: searchParams.get("minPrice") || 0,
+        maxPrice: searchParams.get("maxPrice") || 100000000,
+        storages: searchParams.getAll('storages') || [], // dùng getAll cho mảng
+        isStockReady: searchParams.get('isStockReady') === 'true' || false,
+    }))
     return (
         <div className="min-h-screen bg-gray-50">
             <Banner />
@@ -42,12 +65,21 @@ export default function Product() {
                 selectedCategory={selectedCategory}
                 onCategoryToggle={handleCategoryToggle}
             />
-            <ProductGrid
-                selectedBrand={selectedBrand}
-                selectedCategory={selectedCategory}
-                page={page}
-                setPage={setPage}
-            />
+            <div className="max-w-[1200px] mx-auto px-4 py-6">
+                <div className="flex gap-6">
+                    <FilterSidebar
+                        filters={filters}
+                        onFiltersChange={handleFilterChange}
+                        onResetAllFilters={handleResetAllFilters}
+                    />
+                    <ProductGrid
+                        selectedBrand={selectedBrand}
+                        selectedCategory={selectedCategory}
+                        page={page}
+                        setPage={setPage}
+                    />
+                </div>
+            </div>
 
         </div>
     )
